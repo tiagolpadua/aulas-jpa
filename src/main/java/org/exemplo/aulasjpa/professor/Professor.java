@@ -1,11 +1,18 @@
 package org.exemplo.aulasjpa.professor;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.exemplo.aulasjpa.disciplina.Disciplina;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "professores")
@@ -17,6 +24,10 @@ public class Professor {
 
   @Column(nullable = false)
   private String nome;
+  
+  @OneToMany(mappedBy = "professores")
+  @JsonBackReference
+  private Set<Disciplina> disciplinas;
 
   public Long getId() {
     return id;
@@ -32,6 +43,14 @@ public class Professor {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public Set<Disciplina> getDisciplinas() {
+    return disciplinas;
+  }
+
+  public void setDisciplinas(Set<Disciplina> disciplinas) {
+    this.disciplinas = disciplinas;
   }
 
 }
