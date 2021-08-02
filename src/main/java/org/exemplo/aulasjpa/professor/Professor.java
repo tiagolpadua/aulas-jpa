@@ -25,7 +25,7 @@ public class Professor {
   @Column(nullable = false)
   private String nome;
   
-  @OneToMany(mappedBy = "professores")
+  @OneToMany(mappedBy = "professor")
   @JsonBackReference
   private Set<Disciplina> disciplinas;
 
