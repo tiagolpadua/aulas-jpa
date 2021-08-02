@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.exemplo.aulasjpa.disciplina.Disciplina;
+import org.exemplo.aulasjpa.disciplina.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ public class TurmaController {
 
   @Autowired
   private TurmaRepository turmaRepository;
+  
+  @Autowired
+  private DisciplinaRepository disciplinaRepository;
 
   @GetMapping
   public List<Turma> listar() {
@@ -42,6 +47,22 @@ public class TurmaController {
     URI location = uriBuilder.path("/turmas/{id}").buildAndExpand(novoTurma.getId()).toUri();
 
     return ResponseEntity.created(location).body(turmaSalvo);
+  }
+  
+  @PutMapping("/{turmaId}/disciplina/{disciplinaId}")
+  public ResponseEntity<Turma> incluirDisciplina(@PathVariable Long turmaId, @PathVariable Long disciplinaId) {
+    Disciplina disciplina = disciplinaRepository.findById(disciplinaId).get();
+    Turma turma = turmaRepository.findById(turmaId).get();
+    turma.getDisciplinas().add(disciplina);
+    return ResponseEntity.ok(turma);
+  }
+  
+  @DeleteMapping("/{turmaId}/disciplina/{disciplinaId}")
+  public ResponseEntity<Turma> excluirDisciplina(@PathVariable Long turmaId, @PathVariable Long disciplinaId) {
+    Disciplina disciplina = disciplinaRepository.findById(disciplinaId).get();
+    Turma turma = turmaRepository.findById(turmaId).get();
+    turma.getDisciplinas().remove(disciplina);
+    return ResponseEntity.ok(turma);
   }
 
   @PutMapping("/{id}")

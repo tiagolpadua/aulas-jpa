@@ -3,7 +3,6 @@ package org.exemplo.aulasjpa.aluno;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,8 +32,9 @@ public class Aluno {
   @JsonManagedReference
   private Endereco endereco;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "turma_id")
+  @JsonManagedReference
   private Turma turma;
 
   public Long getId() {

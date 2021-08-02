@@ -33,20 +33,4 @@ public class MatriculaController {
 
     return ResponseEntity.ok().build();
   }
-
-//  @PutMapping("/{id}")
-//  public ResponseEntity<Aluno> alterar(@PathVariable Long id, @RequestBody Aluno alunoAlterado) {
-//    return alunoRepository.findById(id).map(alunoCadastrado -> {
-//      alunoCadastrado.setNome(alunoAlterado.getNome());
-//      return ResponseEntity.ok(alunoCadastrado);
-//    }).orElse(ResponseEntity.notFound().build());
-//  }
-//
-//  @DeleteMapping("/{id}")
-//  public ResponseEntity<Aluno> apagar(@PathVariable Long id) {
-//    Optional<Aluno> possivelAluno = alunoRepository.findById(id);
-//    possivelAluno.ifPresent(alunoRepository::delete);
-//
-//    return possivelAluno.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-//  }
 }

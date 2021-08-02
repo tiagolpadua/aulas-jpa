@@ -57,7 +57,7 @@ public class AlunoController {
     }).orElse(ResponseEntity.notFound().build());
   }
   
-  @PostMapping("/endereco/{id}")
+  @PostMapping("/{id}/endereco")
   public ResponseEntity<Aluno> incluirEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
     return alunoRepository.findById(id).map(alunoCadastrado -> {
       alunoCadastrado.setEndereco(endereco);
@@ -73,7 +73,7 @@ public class AlunoController {
     return possivelAluno.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
   
-  @DeleteMapping("/endereco/{id}")
+  @DeleteMapping("/{id}/endereco")
   public ResponseEntity<Aluno> excluirEndereco(@PathVariable Long id) {
     Optional<Aluno> possivelAluno = alunoRepository.findById(id);
     possivelAluno.ifPresent(aluno -> {
