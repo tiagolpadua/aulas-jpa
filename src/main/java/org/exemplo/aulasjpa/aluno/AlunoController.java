@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.exemplo.aulasjpa.endereco.Endereco;
+import org.exemplo.aulasjpa.endereco.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ public class AlunoController {
 
   @Autowired
   private AlunoRepository alunoRepository;
+  
+  @Autowired
+  private EnderecoRepository enderecoRepository;
 
   @GetMapping
   public List<Aluno> listar() {
@@ -51,12 +56,31 @@ public class AlunoController {
       return ResponseEntity.ok(alunoCadastrado);
     }).orElse(ResponseEntity.notFound().build());
   }
+  
+  @PostMapping("/endereco/{id}")
+  public ResponseEntity<Aluno> incluirEndereco(@PathVariable Long id, @RequestBody Endereco endereco) {
+    return alunoRepository.findById(id).map(alunoCadastrado -> {
+      alunoCadastrado.setEndereco(endereco);
+      return ResponseEntity.ok(alunoCadastrado);
+    }).orElse(ResponseEntity.notFound().build());
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Aluno> apagar(@PathVariable Long id) {
     Optional<Aluno> possivelAluno = alunoRepository.findById(id);
     possivelAluno.ifPresent(alunoRepository::delete);
 
+    return possivelAluno.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+  
+  @DeleteMapping("/endereco/{id}")
+  public ResponseEntity<Aluno> excluirEndereco(@PathVariable Long id) {
+    Optional<Aluno> possivelAluno = alunoRepository.findById(id);
+    possivelAluno.ifPresent(aluno -> {
+      Endereco e = aluno.getEndereco(); 
+      enderecoRepository.delete(e);
+      aluno.setEndereco(null);
+    });
     return possivelAluno.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 }
