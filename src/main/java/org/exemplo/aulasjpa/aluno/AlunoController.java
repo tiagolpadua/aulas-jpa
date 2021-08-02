@@ -1,12 +1,21 @@
 package org.exemplo.aulasjpa.aluno;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/alunos")
@@ -17,44 +26,37 @@ public class AlunoController {
   private AlunoRepository alunoRepository;
 
   @GetMapping
-  public List<Aluno> listaAlunos() {
+  public List<Aluno> listar() {
     return alunoRepository.findAll();
   }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Marca> marcaPorId(@PathVariable Long id) {
-//        return marcaRepository.findById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Marca> cadastraMarca(@Valid @RequestBody Marca novaMarca, UriComponentsBuilder uriBuilder) {
-//        Marca marcaSalva = marcaRepository.save(novaMarca);
-//
-//        URI location = uriBuilder.path("/marcas/{id}")
-//                .buildAndExpand(marcaSalva.getId())
-//                .toUri();
-//
-//        return ResponseEntity.created(location).body(marcaSalva);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Marca> alteraNome(@PathVariable Long id, @Valid @RequestBody Marca marcaAlterada) {
-//        return marcaRepository.findById(id)
-//                .map(marcaCadastrada -> {
-//                    marcaCadastrada.setNome(marcaAlterada.getNome());
-//                    return ResponseEntity.ok(marcaCadastrada);
-//                })
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Marca> deletaMarca(@PathVariable Long id) {
-//        Optional<Marca> possivelMarca = marcaRepository.findById(id);
-//        possivelMarca.ifPresent(marcaRepository::delete);
-//
-//        return possivelMarca.map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+  @GetMapping("/{id}")
+  public ResponseEntity<Aluno> recuperarPorId(@PathVariable Long id) {
+    return alunoRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping
+  public ResponseEntity<Aluno> cadastrar(@RequestBody Aluno novoAluno, UriComponentsBuilder uriBuilder) {
+    Aluno alunoSalvo = alunoRepository.save(novoAluno);
+
+    URI location = uriBuilder.path("/alunos/{id}").buildAndExpand(novoAluno.getId()).toUri();
+
+    return ResponseEntity.created(location).body(alunoSalvo);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Aluno> alterar(@PathVariable Long id, @RequestBody Aluno alunoAlterado) {
+    return alunoRepository.findById(id).map(alunoCadastrado -> {
+      alunoCadastrado.setNome(alunoAlterado.getNome());
+      return ResponseEntity.ok(alunoCadastrado);
+    }).orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Aluno> apagar(@PathVariable Long id) {
+    Optional<Aluno> possivelAluno = alunoRepository.findById(id);
+    possivelAluno.ifPresent(alunoRepository::delete);
+
+    return possivelAluno.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
 }
